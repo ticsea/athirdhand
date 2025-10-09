@@ -1,5 +1,6 @@
 package github.ticsea.athirdhand.events;
 
+import github.ticsea.athirdhand.config.ModConfig;
 import java.util.List;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -8,12 +9,15 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ShulkerBoxMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
 import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class PlayerOpenContainerHandler {
-    private static final Logger LOGGER = LoggerFactory.getLogger(PlayerOpenContainerHandler.class);
+public class ChestOpenEvent {
+    private static final Logger LOGGER = LoggerFactory.getLogger(ChestOpenEvent.class);
+
+    private static final BooleanValue SWITCH = ModConfig.getSwitch();
 
     private static final List<Class<? extends AbstractContainerMenu>> SUPPORT_CONTAINER_LIST = List.of(ChestMenu.class, ShulkerBoxMenu.class);
 
@@ -21,11 +25,10 @@ public class PlayerOpenContainerHandler {
         Player player = event.getEntity();
         AbstractContainerMenu menu = event.getContainer();
 
-        if (SUPPORT_CONTAINER_LIST.contains(menu.getClass())) {
+        if (SUPPORT_CONTAINER_LIST.contains(menu.getClass()) && SWITCH.get()) {
             transferMatchingItems(menu, player);
             LOGGER.debug("WHAT IS THE MENU: {}", menu);
         }
-
     }
 
     private static void transferMatchingItems(AbstractContainerMenu menu, Player player) {
