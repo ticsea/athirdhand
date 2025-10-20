@@ -2,42 +2,58 @@ package github.ticsea.athirdhand.events;
 
 import github.ticsea.athirdhand.config.ModConfig;
 import java.util.List;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.client.gui.screens.inventory.ShulkerBoxScreen;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.inventory.ShulkerBoxMenu;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.client.event.ScreenEvent;
 import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.event.entity.player.PlayerContainerEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class ChestOpenEvent {
-    private static final Logger LOGGER = LoggerFactory.getLogger(ChestOpenEvent.class);
-
+//    private static final Logger LOGGER = LoggerFactory.getLogger(ChestOpenEvent.class);
     private static final BooleanValue SWITCH = ModConfig.getSwitch();
+    private static final List<Class<? extends AbstractContainerMenu>> SUPPORT_CONTAINER_MENU = List.of(ChestMenu.class, ShulkerBoxMenu.class);
+    private static final List<Class<? extends AbstractContainerScreen<?>>> SUPPORT_CONTAINER_SCREEN =
+            List.of(ContainerScreen.class, ShulkerBoxScreen.class);
 
-    private static final List<Class<? extends AbstractContainerMenu>> SUPPORT_CONTAINER_LIST = List.of(ChestMenu.class, ShulkerBoxMenu.class);
+    private static final Minecraft mc = Minecraft.getInstance();
 
-    public static void onPlayerOpenContainer(PlayerContainerEvent.Open event) {
-        Player player = event.getEntity();
-        AbstractContainerMenu menu = event.getContainer();
+    public static void onChestOpen(ScreenEvent.Opening event) {
+//        LOGGER.debug("Fired");
 
-        if (SUPPORT_CONTAINER_LIST.contains(menu.getClass()) && SWITCH.get()) {
-            transferMatchingItems(menu, player);
-            LOGGER.debug("WHAT IS THE MENU: {}", menu);
-        }
+        if (!SWITCH.get() || !SUPPORT_CONTAINER_SCREEN.contains(event.getScreen().getClass())) return;
+
+        if (mc.getConnection() == null) return; // check connection will also check player == null too.
+        Player player = mc.player;
+        AbstractContainerMenu container = player.containerMenu;
+        if (!SUPPORT_CONTAINER_MENU.contains(container.getClass())) return;
+
+        int containerId = container.containerId;
+        mc.execute(() -> transferMatchingItems(container, containerId, player, mc));
     }
 
-    private static void transferMatchingItems(AbstractContainerMenu menu, Player player) {
-        for (Slot slot : menu.slots) {
-            if (slot.container instanceof Inventory) continue; // 跳过玩家自身的物品栏
+    private static void transferMatchingItems(
+            AbstractContainerMenu container,
+            int containerId,
+            Player player,
+            Minecraft mc
+    ) {
+        for (Slot slot : container.slots) {
+            if (slot.container instanceof Inventory) continue;
 
             ItemStack stack = slot.getItem();
+//            Do not check if stack is empty,it conver by contains()
+//            the method contains() may cause wrong because SOME ITEM NBT DIFF.
             if (player.getInventory().contains(stack)) {
-                menu.quickMoveStack(player, slot.index);
+                assert mc.gameMode != null;
+                mc.gameMode.handleInventoryMouseClick(containerId, slot.index, 0, ClickType.QUICK_MOVE, player); //0 is left-button.
             }
         }
     }
