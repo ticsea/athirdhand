@@ -10,19 +10,11 @@ import org.lwjgl.glfw.GLFW;
 public class ModKeyBinding {
     private static final Lazy<KeyMapping> MOD_SWITCH;
 
-    public static KeyMapping getKey() {
-        return MOD_SWITCH.get();
-    }
-
     static {
         MOD_SWITCH = keyFactory(
                 "key.athirdhand.switch",
                 GLFW.GLFW_KEY_H
         );
-    }
-
-    public static void registerKeybind(RegisterKeyMappingsEvent event) {
-        event.register(MOD_SWITCH.get());
     }
 
     private static Lazy<KeyMapping> keyFactory(String description, int key) {
@@ -34,5 +26,13 @@ public class ModKeyBinding {
                         key,
                         "key.categories.athirdhand"
                 ));
+    }
+
+    public static void registerKeybind(RegisterKeyMappingsEvent event) {
+        event.register(MOD_SWITCH.get());
+    }
+
+    public static KeyMapping getKey() {
+        return MOD_SWITCH.get();
     }
 }
