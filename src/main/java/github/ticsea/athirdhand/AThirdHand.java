@@ -22,12 +22,12 @@ public class AThirdHand {
 
     public AThirdHand(FMLJavaModLoadingContext context) {
         var modEventBus = context.getModEventBus();
-        var forgeEvenBus = MinecraftForge.EVENT_BUS;
+        var forgeEventBus = MinecraftForge.EVENT_BUS;
 
-        if (FMLEnvironment.dist==Dist.CLIENT) {
+        if (FMLEnvironment.dist == Dist.CLIENT) {
             modEventBus.addListener(ModKeyBinding::registerKeybind);
-            forgeEvenBus.addListener(KeyPressEvent::onKeyPress);
-            forgeEvenBus.addListener(ChestOpenEvent::onChestOpen);
+            forgeEventBus.addListener(KeyPressEvent::onKeyPress);
+            forgeEventBus.addListener(ChestOpenEvent::onChestOpen);
         }
         context.registerConfig(ModConfig.Type.CLIENT, SPEC);
         github.ticsea.athirdhand.config.ModConfig.loadConfig();
