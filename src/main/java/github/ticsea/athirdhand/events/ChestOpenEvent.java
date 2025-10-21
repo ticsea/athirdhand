@@ -27,16 +27,14 @@ public class ChestOpenEvent {
 
     public static void onChestOpen(ScreenEvent.Opening event) {
 //        LOGGER.debug("Fired");
-
+        // check connection will also check player == null too.
+        if (mc.getConnection() == null) return;
         if (!SWITCH.get() || !SUPPORT_CONTAINER_SCREEN.contains(event.getScreen().getClass())) return;
 
-        if (mc.getConnection() == null) return; // check connection will also check player == null too.
-        Player player = mc.player;
-        AbstractContainerMenu container = player.containerMenu;
+        var player = mc.player;
+        var container = player.containerMenu;
         if (!SUPPORT_CONTAINER_MENU.contains(container.getClass())) return;
-
-        int containerId = container.containerId;
-        mc.execute(() -> transferMatchingItems(container, containerId, player, mc));
+        mc.execute(() -> transferMatchingItems(container, container.containerId, player, mc));
     }
 
     private static void transferMatchingItems(
@@ -49,11 +47,11 @@ public class ChestOpenEvent {
             if (slot.container instanceof Inventory) continue;
 
             ItemStack stack = slot.getItem();
-//            Do not check if stack is empty,it conver by contains()
-//            the method contains() may cause wrong because SOME ITEM NBT DIFF.
-            if (player.getInventory().contains(stack)) {
-                assert mc.gameMode != null;
-                mc.gameMode.handleInventoryMouseClick(containerId, slot.index, 0, ClickType.QUICK_MOVE, player); //0 is left-button.
+            // the method contains() may cause wrong because SOME ITEM NBT DIFF.
+            if (!stack.isEmpty() && player.getInventory().contains(stack)) {
+                // 0 respond left button click.
+                // IDEA says handleInventoryMouseClick may produce nullpointerException.
+                mc.gameMode.handleInventoryMouseClick(containerId, slot.index, 0, ClickType.QUICK_MOVE, player);
             }
         }
     }
