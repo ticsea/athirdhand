@@ -1,6 +1,6 @@
 {
   "key.categories.athirdhand": "A THIRD HAND",
   "key.athirdhand.switch": "Mod Switch",
-  "athirdhand.state.on": "HAND: ON",
-  "athirdhand.state.off": "HAND: OFF"
+  "info.state.on": "HAND: ON",
+  "info.state.off": "HAND: OFF"
 }
