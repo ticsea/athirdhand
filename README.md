@@ -10,6 +10,9 @@
     <a href="https://www.curseforge.com/minecraft/mc-mods/athirdhand">
         <img src="https://img.shields.io/curseforge/dt/1288509?style=flat-square&logo=curseforge&label=CurseForge" alt="CurseForge Downloads">
     </a>
+    <a href="https://deepwiki.com/sakura-ryoko/malilib">
+        <img src="https://deepwiki.com/badge.svg" alt="Ask DeepWiki">
+    </a>
 </p>
 
 ## Features
