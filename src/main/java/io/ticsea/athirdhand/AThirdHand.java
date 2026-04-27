@@ -12,16 +12,15 @@
 
 package io.ticsea.athirdhand;
 
-import static io.ticsea.athirdhand.config.ModConfig.SPEC;
+import static io.ticsea.athirdhand.config.ModConfigs.SPEC;
 
 import io.ticsea.athirdhand.client.ModKeyBinding;
+import io.ticsea.athirdhand.config.ModConfigs;
 import io.ticsea.athirdhand.events.KeyPressEvent;
-import io.ticsea.athirdhand.events.ChestOpenEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
@@ -37,10 +36,10 @@ public class AThirdHand {
         if (FMLEnvironment.dist == Dist.CLIENT) {
             modEventBus.addListener(ModKeyBinding::registerKeybind);
             forgeEventBus.addListener(KeyPressEvent::onKeyPress);
-            forgeEventBus.addListener(ChestOpenEvent::onChestOpen);
         }
         context.registerConfig(ModConfig.Type.CLIENT, SPEC);
-
-        io.ticsea.athirdhand.config.ModConfig.loadConfig();
+        ModConfigs.loadConfig();
     }
+
+
 }

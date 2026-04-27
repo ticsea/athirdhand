@@ -2,5 +2,7 @@
   "key.categories.athirdhand": "A THIRD HAND",
   "key.athirdhand.switch": "Mod Switch",
   "info.state.on": "HAND: ON",
-  "info.state.off": "HAND: OFF"
+  "info.state.off": "HAND: OFF",
+  "afknokit.tooltip.check_nbt_button.on": "checkNBT: ON",
+  "afknokit.tooltip.check_nbt_button.off": "checkNBT: OFF"
 }

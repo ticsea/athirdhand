@@ -2,5 +2,7 @@
   "key.categories.athirdhand": "速拾宝",
   "key.athirdhand.switch": "模组开关",
   "info.state.on": "HAND: 启用",
-  "info.state.off": "HAND: 关闭"
+  "info.state.off": "HAND: 关闭",
+  "afknokit.tooltip.check_nbt_button.on": "匹配NBT: 启用",
+  "afknokit.tooltip.check_nbt_button.off": "匹配NBT: 关闭"
 }
